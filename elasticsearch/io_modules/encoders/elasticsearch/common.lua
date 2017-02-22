@@ -24,7 +24,13 @@ encoders_elasticsearch_common = {
     -- String to use as the `_id` key's value in the generated JSON.
     -- Supports field interpolation as described below.
     id = nil -- optional, default shown
-}
+
+    -- String to use as the time format for the parameter
+    timestamp = "!%Y-%m-%dT%H:%M:%S" -- optional, default show
+
+    -- Array of heka message key to add in the final payload
+    fields = {} -- optional, default show
+   }
 
 ```
 
@@ -131,6 +137,18 @@ function load_encoder_cfg()
         assert(type(cfg.type_name) == "string", "type_name must be nil or a string")
     end
 
+    if cfg.timestamp == nil then
+       cfg.timestamp = "!%Y-%m-%dT%H:%M:%S"
+    else
+       assert(type(cfg.timestamp) == "string", "timestamp must be nil or a string")
+    end
+
+    if cfg.fields == nil then
+       cfg.fields = {}
+    else
+       assert(type(cfg.fields) == "table", "fields must be nil or a table")
+    end
+    
     return cfg
 end
 
